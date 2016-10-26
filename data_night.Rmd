@@ -1,6 +1,6 @@
 ---
 title: "Data @ Night - What's in a name?"
-author: "Chris Hua"
+author: "WUDAC"
 date: "26 October 2016"
 output: beamer_presentation
 ---
@@ -57,8 +57,12 @@ babynames <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/3
 Useful commands:
 
 ```{r, eval = F}
-head(babynames)
-babynames %>% filter(name == "")
+babynames %>% head()
+babynames %>% str()
+babynames %>% filter(name == "Christopher")
+babynames %>% filter(sex == "M")
+babynames %>% filter(name == "Jack") %>% 
+    select(year, n) %>% plot()
 ```
 
 ## Trends
@@ -69,9 +73,22 @@ babynames %>%
            sex == "F",
            year >= 1960) %>%
     ggplot(aes(x = year, y = prop * 100, color = name, label = name)) + 
-    geom_line() + theme_bw() +
+    geom_line() + theme_classic() +
     theme(legend.position = "none") + ylab("% of babies born") + 
-    ggtitle("Guess who?")
+    ggtitle("Guess who?") + xlab("Year")
+```
+
+## Trends 2
+
+```{r, echo = F}
+babynames %>%
+    filter(name %in% c("Hilary", "Isis", "Khaleesi", "Ashanti", "Miley"),
+           sex == "F",
+           year >= 1960) %>%
+    ggplot(aes(x = year, y = prop * 100, color = name, label = name)) + 
+    geom_line() + theme_classic() +
+    theme(legend.position = "bottom") + ylab("% of babies born") + 
+    ggtitle("Guess who?") + xlab("Year")
 ```
 
 ## Poisoned names
@@ -80,7 +97,7 @@ Names that drop off - a lot - between years
 
 How to detect? 
 
-"Relative Risk"
+"Relative Risk": current proportion / proportion a year before
 
 ## Output
 
@@ -90,22 +107,41 @@ names_loss <- babynames %>%
     group_by(name) %>%
     arrange(year) %>%
     mutate(loss = 1 - round((prop / lag(prop, 1)), 2)) %>%
-    arrange(loss) %>% ungroup
+    arrange(-loss) %>% ungroup
 
 names_loss %>%
     select(year, name, loss) %>%
     head(15) %>% knitr::kable()
 ```
 
-## Graph
+## Process
 
-```{r}
-top_names <- names_loss %>%
-    top_n(15, wt = loss) %>%
-    select(name) %>%
-    unique %>% unlist
+For each name - calculate "loss"
 
-
+```{r, eval = F}
+babynames %>%
+    filter(sex == "F", n >= 115) %>%
+    group_by(name) %>%
+    mutate(loss = 1 - round((prop / lag(prop, 1)), 2)) %>%
+    arrange(-loss)
 ```
 
-## Outliers!
+## Plot
+
+```{r, eval = F}
+babynames %>%
+    filter(name == "Adolf", sex == "M")  %>%
+    ggplot(aes(x = year, y = n)) + geom_line() + 
+    theme_classic() + ggtitle("Adolf") + 
+    xlab("Year") + ylab("Babies")
+```
+
+## Plot
+
+```{r, echo= F}
+babynames %>%
+    filter(name == "Adolf", sex == "M")  %>%
+    ggplot(aes(x = year, y = n)) + geom_line() + 
+    theme_classic() + ggtitle("Adolf") + 
+    xlab("Year") + ylab("Babies")
+```
