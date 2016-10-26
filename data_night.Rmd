@@ -30,7 +30,7 @@ Install our easy to use `babynames` package:
 
 ```{r, eval = F}
 if(!require(devtools)) {
-  install.packages(devtools)
+  install.packages("devtools")
 }
 devtools::install_github(
     "wharton-data-analytics/babynames")
@@ -45,6 +45,10 @@ if(!require(ggplot2)) {
 if(!require(dplyr)) {
     install.packages("dplyr")
 }
+
+library(babynames)
+library(dplyr)
+library(ggplot2)
 
 applicants <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/applicants.csv")
 births <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/births.csv")
