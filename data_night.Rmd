@@ -1,5 +1,5 @@
 ---
-title: "Data @ Night"
+title: "Data @ Night - What's in a name?"
 author: "Chris Hua"
 date: "26 October 2016"
 output: beamer_presentation
@@ -18,13 +18,15 @@ library(dplyr)
 * Jack Soslow
 * Yoonduk Kim
 
+Goal: spend time getting familiar with R and basic data manipulation
+
 ## Babies!
 
 ![Hillary](http://blogs.reuters.com/great-debate/files/2015/04/clinton-baby-1024x783.jpg)
 
 ## Install packages and load data
 
-Install our easy to use `babynames` package
+Install our easy to use `babynames` package:
 
 ```{r, eval = F}
 if(!require(devtools)) {
@@ -34,24 +36,42 @@ devtools::install_github(
     "wharton-data-analytics/babynames")
 ```
 
-or look in the R code for a work around.
+or look in the R code for a work around. Also, install a few more packages...
 
 ```{r, eval = F, echo = F}
+if(!require(ggplot2)) {
+    install.packages("ggplot2")
+}
+if(!require(dplyr)) {
+    install.packages("dplyr")
+}
+
 applicants <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/applicants.csv")
 births <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/births.csv")
 lifetables <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/lifetables.csv")
 babynames <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/3192856738dee4a91bfc7d320355daa5ae428c17/data-raw/csv/babynames.csv")
 ```
 
+## Explore the data!
+
+Useful commands:
+
+```{r, eval = F}
+head(babynames)
+babynames %>% filter(name == "")
+```
+
 ## Trends
 
 ```{r, echo = F}
 babynames %>%
-    filter(name == "Hillary") %>%
-    group_by(name, year) %>%
-    summarize(n = sum(n)) %>%
-    ggplot(aes(x = year, y = n)) + geom_line() + 
-    ggtitle("Babies named Hillary") + theme_bw()
+    filter(name %in% c("Hilary", "Isis", "Khaleesi", "Ashanti", "Miley"),
+           sex == "F",
+           year >= 1960) %>%
+    ggplot(aes(x = year, y = prop * 100, color = name, label = name)) + 
+    geom_line() + theme_bw() +
+    theme(legend.position = "none") + ylab("% of babies born") + 
+    ggtitle("Guess who?")
 ```
 
 ## Poisoned names
@@ -65,12 +85,27 @@ How to detect?
 ## Output
 
 ```{r, echo = F}
-babynames %>%
-    filter(sex == "F", n >= 100) %>%
+names_loss <- babynames %>%
+    filter(sex == "F", n >= 115) %>%
     group_by(name) %>%
     arrange(year) %>%
     mutate(loss = 1 - round((prop / lag(prop, 1)), 2)) %>%
-    arrange(-loss) %>% 
-    select(year, name, n, loss) %>%
-    head(20) %>% knitr::kable()
+    arrange(loss) %>% ungroup
+
+names_loss %>%
+    select(year, name, loss) %>%
+    head(15) %>% knitr::kable()
 ```
+
+## Graph
+
+```{r}
+top_names <- names_loss %>%
+    top_n(15, wt = loss) %>%
+    select(name) %>%
+    unique %>% unlist
+
+
+```
+
+## Outliers!
