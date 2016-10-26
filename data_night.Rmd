@@ -1,0 +1,55 @@
+---
+title: "Data @ Night"
+author: "Chris Hua"
+date: "26 October 2016"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(babynames)
+library(ggplot2)
+library(dplyr)
+```
+
+## About us
+
+* Chris Hua
+* Jack Soslow
+* Yoonduk Kim
+
+## Babies!
+
+![Hillary](http://blogs.reuters.com/great-debate/files/2015/04/clinton-baby-1024x783.jpg)
+
+## Install packages and load data
+
+Install our easy to use `babynames` package
+
+```{r, eval = F}
+if(!require(devtools)) {
+  install.packages(devtools)
+}
+devtools::install_github(
+    "wharton-data-analytics/babynames")
+```
+
+or look in the R code for a work around.
+
+```{r, eval = F, echo = F}
+applicants <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/applicants.csv")
+births <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/births.csv")
+lifetables <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/master/data-raw/csv/lifetables.csv")
+babynames <- read.csv("https://cdn.rawgit.com/wharton-data-analytics/babynames/3192856738dee4a91bfc7d320355daa5ae428c17/data-raw/csv/babynames.csv")
+```
+
+## Trends
+
+```{r, echo = F}
+babynames %>%
+    filter(name == "Hillary") %>%
+    group_by(name, year) %>%
+    summarize(n = sum(n)) %>%
+    ggplot(aes(x = year, y = n)) + geom_line()
+```
+
