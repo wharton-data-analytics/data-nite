@@ -50,6 +50,27 @@ babynames %>%
     filter(name == "Hillary") %>%
     group_by(name, year) %>%
     summarize(n = sum(n)) %>%
-    ggplot(aes(x = year, y = n)) + geom_line()
+    ggplot(aes(x = year, y = n)) + geom_line() + 
+    ggtitle("Babies named Hillary") + theme_bw()
 ```
 
+## Poisoned names
+
+Names that drop off - a lot - between years
+
+How to detect? 
+
+"Relative Risk"
+
+## Output
+
+```{r, echo = F}
+babynames %>%
+    filter(sex == "F", n >= 100) %>%
+    group_by(name) %>%
+    arrange(year) %>%
+    mutate(loss = 1 - round((prop / lag(prop, 1)), 2)) %>%
+    arrange(-loss) %>% 
+    select(year, name, n, loss) %>%
+    head(20) %>% knitr::kable()
+```
