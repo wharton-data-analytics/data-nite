@@ -122,21 +122,24 @@ names_loss %>%
 
 For each name - calculate "loss"
 
+$loss = 1 - prop_t / prop_{t-1}$
+
 ```{r, eval = F}
 babynames %>%
-    filter(sex == "F", n >= 115) %>%
+    filter(sex == "M", n >= 115) %>%
     group_by(name) %>%
     mutate(loss = 1 - round((prop / lag(prop, 1)), 2)) %>%
-    arrange(-loss)
+    arrange(loss)
 ```
 
 ## Plot
 
 ```{r, eval = F}
+thename <- "Barron"
 babynames %>%
-    filter(name == "Adolf", sex == "M")  %>%
+    filter(name == thename, sex == "M")  %>%
     ggplot(aes(x = year, y = n)) + geom_line() + 
-    theme_classic() + ggtitle("Adolf") + 
+    theme_classic() + ggtitle(thename) + 
     xlab("Year") + ylab("Babies")
 ```
 
@@ -148,4 +151,14 @@ babynames %>%
     ggplot(aes(x = year, y = n)) + geom_line() + 
     theme_classic() + ggtitle("Adolf") + 
     xlab("Year") + ylab("Babies")
+```
+
+
+```{r}
+babynames %>%
+    filter(name == "Christopher", sex == "M")  %>%
+    ggplot(aes(x = year, y = n)) + geom_line() + 
+    theme_classic() + 
+    xlab("Year") + ylab("Babies")
+
 ```

@@ -1,0 +1,125 @@
+---
+title: "Poisoned Names Analysis"
+author: "Chris Hua"
+date: "10/31/2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(babynames)
+library(dplyr)
+library(ggplot2)
+```
+
+## Motivation
+
+Hilary Parker wrote a fantastic blog/article a few years ago, about how the name Hillary is [The Most Poisoned Baby Name in U.S. History](http://nymag.com/thecut/2013/01/hillary-most-poisoned-baby-name-in-us-history.html). We wanted to replicate her analysis, show off how easy and clean `dplyr` makes this analysis, and show some cool trends visible in the 2015 data.
+
+For this analysis, we used a modified version of Hadley's `babynames` [package](https://github.com/hadley/babynames). Our version is found on [Github](https://github.com/wharton-data-analytics/babynames) as well, but is updated to include 2015 data.
+
+## Poisoned Names
+
+We borrow the "relative risk" framework that Parker uses. We define relative risk and loss as:
+
+$$risk_{i,t} = p_{i,t} / p_{i, t-1} \\
+loss_{i, t} = 1 - risk_{i, t}$$
+
+Where $p_t$ is the proportion of babies born in a year $t$, with a given name $i$.
+
+We can do this very easily using the built-in `dplyr` functions to offset each row by 1, so we can examine the changes year to year. We also add a check to ensure that we aren't picking up names dropping in and out of the census observation. We also need to group by name and sex, since some typically female names are given to men occasionally, and vice versa. [Insert Archer gif here]
+
+Note: we choose to perform this analysis using lagged data, rather than leading data, because we want to pick up trends in 2015. Parker's analysis uses a leading approach, but this should yield us identical results except for when a given year is the first or last  of that observation period.
+
+```{r}
+names_loss <- babynames %>%
+    group_by(name, sex) %>%
+    arrange(year) %>%
+    mutate(loss = 1 - (prop / lag(prop, 1))) %>%
+    filter(year == lag(year, 1) + 1) %>% 
+    arrange(-loss) %>% 
+    ungroup
+```
+
+Then, let's only look at the female names:
+
+```{r}
+names_loss %>%
+    filter(sex == "F", n > 100) %>%
+    head(10) %>% 
+    knitr::kable(digits = 2)
+```
+
+This looks pretty similar to ![original chart](https://hilaryparker.files.wordpress.com/2013/01/bigdrop.png).
+
+As with Parker's analysis, we will cut out a few "flash in the pan" names. I removed the ones that she covered in her analysis, but there's a few new ones, and I don't have great explanations for why these names could/should be treated as flash in the pan names. 
+
+```{r}
+flash_names <- c("Dewey", "Katina", "Catina", "Farrah", "Renata", "Infant", 
+                 "Iesha", "Kadijah", "Khadijah")
+big_drops <- names_loss %>%
+    filter(sex == "F", n > 100) %>%
+    head(10) %>% 
+    filter(!(name %in% flash_names))
+big_drops %>% knitr::kable()
+```
+
+Then, we will do the same process of plotting the names and seeing trends - do these names have any sticking power?
+
+```{r, echo = F}
+sticky_names <- big_drops$name
+babynames %>%
+    filter(sex == "F", name %in% sticky_names) %>%
+    ggplot(aes(x = year, y = prop * 100, color = name)) +
+    geom_line() + theme_classic() + 
+    theme(legend.position = "bottom") +
+    ggtitle("Percent of babies born") + xlab("") + ylab("Percent")
+```
+
+It looks like my Google skills are lacking - Deneen, Kaleena, Citali, and Stephani each have huge spikes with little other sticking power. Stefani may be the artifact of a [typo mess](http://www.nancy.cc/2007/11/08/the-great-baby-name-glitch-of-1989-christop-alexandr-elizabet/). That leaves...
+
+## The Syria Connection
+
+The proportional dropoff that Hilary faced in 1993 was 70%. The proportional dropoff that Isis faced in 2015 was 70%. 
+
+```{r, echo =F}
+babynames %>%
+    filter(sex == "F", name %in% c("Hilary", "Isis")) %>%
+    ggplot(aes(x = year, y = prop * 100, color = name)) +
+    geom_line() + theme_classic() + 
+    theme(legend.position = "bottom") +
+    ggtitle("Percent of babies born - real poison hours") + xlab("") + ylab("Percent")
+```
+
+I can't think of any better metaphor for how people thought about Hillary Clinton than that her name had as much dropoff as the name of a group that's despicable by even terrorist standards.
+
+## Appendix
+
+We can also plot the loss trends for these two names. We see that the two names have similar peaks at 70% loss, which is what we expect. Note that in this chart, higher points mean more relative loss.
+
+```{r, echo = F}
+babynames %>%
+    filter(name %in% c("Hilary", "Isis"), sex == "F") %>%
+    group_by(name, sex) %>%
+    arrange(year) %>%
+    mutate(loss = 1 - (prop / lag(prop, 1))) %>%
+    filter(year == lag(year, 1) + 1) %>% 
+    arrange(-loss) %>% 
+    ungroup() %>%
+    ggplot(aes(x = year, y = loss * 100, color = name)) +
+    geom_line() + theme_classic() + 
+    theme(legend.position = "bottom") +
+    ggtitle("Relative Loss Trends") + xlab("") + ylab("Loss")
+```
+
+We also plot the effect on the name of Hillary. It's probably worth questioning if some of the dropoff in "Hilary" is due to parents who would have named their daughters "Hilary" naming their daughters "Hillary" instead. The two names are roughly equal in popularity until the Clintons come to the public eye, but now Hillary is twice as popular as Hilary. Somewhat amusingly, Isis was more popular than both of these names until recently...
+
+```{r, echo =F}
+babynames %>%
+    filter(sex == "F", name %in% c("Hilary", "Hillary", "Isis")) %>%
+    ggplot(aes(x = year, y = prop * 100, color = name)) +
+    geom_line() + theme_classic() + 
+    theme(legend.position = "bottom") +
+    ggtitle("Percent of babies born") + xlab("") + ylab("Percent")
+```
+
