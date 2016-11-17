@@ -24,6 +24,8 @@ We have provided a dataset in csv format for you to test out your alert. When yo
 ```{r}
 bookings <- read.csv("challenge_data.csv")
 str(bookings)
+bookings$ds <- as.Date(bookings$ds) 
+str(bookings)
 ```
 
 ```{r}
@@ -33,10 +35,28 @@ str(bookings)
 ## Visualize!
 
 ```{r}
+library(dplyr)
+install.packages('dplyr')
 
+city_1 <- filter(bookings, city == "City_1")
+city_2 <- filter(bookings, city == "City_2")
+
+plot(city_2$bookings)
+```
+
+```{r}
+bookings %>%
+    ggplot(aes(x = ds, y = bookings)) + geom_point() + 
+    facet_wrap(~ city)
 ```
 
 
 ## Outliers
+
+```{r}
+install.packages('zoo')
+library(zoo)
+zoo::rollapply(city_1$bookings, FUN = sum, 30) %>% plot
+```
 
 ## Discuss
