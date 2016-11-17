@@ -105,8 +105,11 @@ city_1$std <- slide_apply(city_1$bookings, 30, 1, sd)
 city_2$std <- slide_apply(city_2$bookings, 30, 1, sd)
 
 ggplot(data = city_1, aes(x = ds, y = bookings)) +
+    theme_bw() +
     geom_errorbar(aes(ymin=avg-2*std, ymax=avg+2*std), colour = "#dfc27d", width=0.05) +
 	geom_point()
+
+# this is all on the github link
 ```
 
 ## Discuss
