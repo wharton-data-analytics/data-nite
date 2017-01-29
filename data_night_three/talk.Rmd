@@ -1,0 +1,85 @@
+---
+title: "Data@Nite"
+author: "Chris Hua"
+date: "1/29/2017"
+output: beamer_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Examples
+
+Almost everything can be a data science problem...
+
+- Residency matching
+- 
+- FedEx problem
+
+## Residency matching
+
+- How can we *fairly* match medical school graduates with hospitals for residencies?
+- Goal: to match applicants to hospitals so that the final result is "stable", i.e. no applicant A and hospital H such that both:
+    - No A is unmatched or would prefer to go to H over the hospital he is currently matched with
+    - H has a free slot or would prefer A over one of the candidates currently filling one of its slots.
+- Won 2012 Nobel Prize in Economics
+
+
+## FedEx problem
+
+- FedEx needed to pick a hub location that is close to everywhere
+- You could use data science for this:
+
+![](http://i.imgur.com/F3ZP9C7.png)
+
+## FedEx problem
+
+20 pages of math and data processing later:
+
+![](http://i.imgur.com/9DlijRb.png)
+
+## FedEx problem 
+
+![Or not](http://i.imgur.com/ui5gAro.png)
+
+## Data science
+
+- Using data, statistics, and logic to answer business questions
+- Involved in all steps of the business process
+    - Unsupervised analysis
+    - Experiment design
+    - Experiment analysis
+    - Feature creation
+
+## Finance
+
+- Quant funds - Two Sigma
+- Consulting: sort of
+
+## Healthcare
+
+## Industrials
+
+- Oil field prediction
+
+## Tech
+
+- Me
+- Product
+
+## Role breakdowns
+
+- Business analyst
+- Data analyst
+- Data scientist
+- Machine learning engineer
+- Data engineer
+
+## Technical stuff
+
+- R / Python
+- SQL (Hadoop, etc)
+
+## What to do
+
