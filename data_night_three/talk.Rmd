@@ -1,15 +1,20 @@
 ---
 title: "Data@Nite"
+subtitle: "ELI5: Data Science"
 author: "Chris Hua"
 date: "1/29/2017"
-output: beamer_presentation
+output: 
+    beamer_presentation:
+        theme: "Rochester"
+        colortheme: "orchid"
+        toc: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Examples
+# Examples
 
 Almost everything can be a data science problem...
 
@@ -17,7 +22,7 @@ Almost everything can be a data science problem...
 - 
 - FedEx problem
 
-## Residency matching
+# Residency matching
 
 - How can we *fairly* match medical school graduates with hospitals for residencies?
 - Goal: to match applicants to hospitals so that the final result is "stable", i.e. no applicant A and hospital H such that both:
@@ -26,24 +31,24 @@ Almost everything can be a data science problem...
 - Won 2012 Nobel Prize in Economics
 
 
-## FedEx problem
+# FedEx problem
 
 - FedEx needed to pick a hub location that is close to everywhere
 - You could use data science for this:
 
 ![](http://i.imgur.com/F3ZP9C7.png)
 
-## FedEx problem
+# FedEx problem
 
 20 pages of math and data processing later:
 
 ![](http://i.imgur.com/9DlijRb.png)
 
-## FedEx problem 
+# FedEx problem 
 
 ![Or not](http://i.imgur.com/ui5gAro.png)
 
-## Data science
+# Data science
 
 - Using data, statistics, and logic to answer business questions
 - Involved in all steps of the business process
@@ -52,34 +57,54 @@ Almost everything can be a data science problem...
     - Experiment analysis
     - Feature creation
 
-## Finance
+# Finance
 
-- Quant funds - Two Sigma
-- Consulting: sort of
+- Quant funds (Two Sigma, RenTech, etc) make trading strategies from lots of weak signals
+- Banks/insurance use data to manage risk
+- Consulting: it's data science without data, or science 
 
-## Healthcare
+# Marketing
 
-## Industrials
+- Fundamental question: Who should we target, and how can we reach them?
+    - Customer lifetime value and segmentation
+    - Targeting, A/B testing, optimization
 
-- Oil field prediction
+# Healthcare
 
-## Tech
+- Predictive analytics - readmission rates
+- Epidemiology - disease spread modelling
+- Diagnosis - [sort of](https://www.mskcc.org/blog/msk-trains-ibm-watson-help-doctors-make-better-treatment-choices)
 
-- Me
-- Product
+# Industrial/Manufacturing/Farming
 
-## Role breakdowns
+- Lot of operations research, manufacturing optimization
+- Oil field discovery, accident/anomaly detection
+- Crop productivity, environmental analysis
 
-- Business analyst
-- Data analyst
-- Data scientist
-- Machine learning engineer
-- Data engineer
+# Tech
 
-## Technical stuff
+- Product analytics: what features should we implement, and are they working out
+- Content: what should we show to who (e.g. FB Newsfeed)
+- Lots of data, easy measurement, inherently real time update
 
-- R / Python
-- SQL (Hadoop, etc)
+# Role breakdowns
 
-## What to do
+- Business analyst: little programming, some SQL, generally financial analysis, basically a consultant
+- Data analyst: some programming, some stats, lots of SQL, mostly analysis
+- Data scientist: mix of everything
+    - "Analysis" DS: focused on analysis and stats, some programming, little to no ML
+    - "Building" DS: lot of programming, solid stats, at minimum can prototype ML models 
+- Machine learning engineer: deep understanding of ML algorithms, implementation, tuning/optimization
+- Data engineer: lot of programming and databases, some statistics
+- Also: quant researcher, statistician, quantitative analyst, software engineer ...
 
+# Technical stuff
+
+- Programming: mostly R / Python, sometimes Scala/C++ for performance
+- Databases: mostly use SQL, also Hadoop, etc
+
+# What to do
+
+- Learn to program (try [DataCamp](https://www.datacamp.com/))
+- Work with open datasets (shoutout [Data For Democracy](https://medium.com/data-for-democracy))
+- Consider getting a masters/PhD, turns out this is actually really hard
