@@ -7,7 +7,6 @@ output:
     beamer_presentation:
         theme: "Rochester"
         colortheme: "orchid"
-        toc: true
 ---
 
 ```{r setup, include=FALSE}
@@ -18,18 +17,20 @@ knitr::opts_chunk$set(echo = FALSE)
 
 Almost everything can be a data science problem...
 
-- Residency matching
-- 
+- Netflix recommendation
 - FedEx problem
 
-# Residency matching
+# Netflix problem
 
-- How can we *fairly* match medical school graduates with hospitals for residencies?
-- Goal: to match applicants to hospitals so that the final result is "stable", i.e. no applicant A and hospital H such that both:
-    - No A is unmatched or would prefer to go to H over the hospital he is currently matched with
-    - H has a free slot or would prefer A over one of the candidates currently filling one of its slots.
-- Won 2012 Nobel Prize in Economics
+- How can Netflix recommend you movies to watch?
+- Predicted user ratings for movies
+- Winners used ensembles with 100+ different models
+- Collaborative filtering, discrete choice, matrix factorization, ...
 
+# Netflix problem
+
+- None of the solutions got used
+- Biggest consideration: what is cheapest for Netflix to show?
 
 # FedEx problem
 
